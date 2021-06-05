@@ -1,77 +1,66 @@
 #include "get_next_line.h"
 #include <stdio.h>
+#include <fcntl.h>
 #define LN '\n'
 #define BUFFER_SIZE 50
-#include <fcntl.h>
 
-void	*ft_realloc(void *arr, size_t size)
+int	slice_val(char *str, size_t size)
 {
-	void	*ptr;
-	int		i;
+	size_t	i;
 
 	i = 0;
-	ptr = malloc(size);
-	while (((unsigned char *)arr)[i] != '\0')
+	while (i != size)
 	{
-		((unsigned char *) ptr)[i] = ((unsigned char *) arr)[i];
+		if (str[i] == '\n')
+			return (i);
+		else if (str[i] == EOF)
+			return (i);
 		i++;
 	}
-	free(arr);
-	return (ptr);
+	return (0);
 }
 
-int		line_val(char *str, char **temp, size_t size)
+int	get_line(int fd, char **line)
 {
-	size_t i;
+	static char	slice[BUFFER_SIZE];
+	char		*temp;
+	size_t		i;
+	size_t		j;
 
-	i = 0;
-	while (str[i] != '\n' || str[i] != EOF)
-		if (!str[i++])
-			return (0);
-	temp[0] = ft_substr(str, 0, i);
-	temp[1] = ft_substr(str, i + 1, size - i);
-	temp[2] = (void *) 2;
-	return (i);
-}
-
-char	*get_line(int fd)
-{
-	int		i;
-	int		j;
-	static char	str[BUFFER_SIZE + 1];
-	static char	**temp;
-	char	*final;
-
-	final = (char *) malloc(sizeof(char) * BUFFER_SIZE);
-	temp = (char **) malloc(sizeof(char *) * 3);
-	if (temp[2] == (void *)2)
-		ft_strjoin(final, temp[1]);
-	i = read(fd, str, BUFFER_SIZE);
-	if (i == BUFFER_SIZE)
+	i = slice_val(slice, BUFFER_SIZE);
+	if (i)
 	{
-		str[BUFFER_SIZE] = '\0';
-		j = line_val(str, temp, BUFFER_SIZE);
-		if (!j)
+		temp = ft_substr(slice, i, BUFFER_SIZE - i + 1);
+		*line = ft_strjoin(*line, temp);
+	}
+	while (0 != read(fd, slice, BUFFER_SIZE))
+	{
+		i = slice_val(slice, BUFFER_SIZE);
+		if (!i)
 		{
-			ft_realloc(str, BUFFER_SIZE);
-			ft_strjoin(final, str);
+			temp = ft_substr(slice, 0, BUFFER_SIZE);
+			*line = ft_strjoin(*line, temp);
 		}
 		else
 		{
-			ft_realloc(final, j);
-			ft_strjoin(final, temp[0]);
+			temp = ft_substr(slice, 0, i);
+			*line = ft_strjoin(*line, temp);
+			return (1);
 		}
-		return (final);
 	}
-	j = line_val(str, temp, BUFFER_SIZE);
-	ft_realloc(final, j);
-	ft_strjoin(final, temp[0]);
-	return (final);
+	return (0);
 }
 
-int		get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
+	static char		*string;
 
-	*line = get_line(fd);
-	return (1);
+	string = calloc(1, BUFFER_SIZE);
+	if (get_line(fd, &string))
+	{
+		*line = string;
+		return (1);
+	}
+	else
+		return (0);
 }

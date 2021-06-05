@@ -1,16 +1,24 @@
-I[11:32:55.131] <-- textDocument/codeAction(1395)
-I[11:32:55.131] --> reply:textDocument/codeAction(1395) 0 ms
-I[11:32:55.132] <-- textDocument/documentLink(1396)
-I[11:32:55.132] --> reply:textDocument/documentLink(1396) 0 ms
-I[11:32:55.132] <-- textDocument/hover(1397)
-I[11:32:55.133] --> reply:textDocument/hover(1397) 0 ms
-I[11:32:58.608] <-- textDocument/codeAction(1398)
-I[11:32:58.609] --> reply:textDocument/codeAction(1398) 0 ms
-I[11:32:58.610] <-- textDocument/documentLink(1399)
-I[11:32:58.611] --> reply:textDocument/documentLink(1399) 0 ms
-I[11:32:59.566] <-- textDocument/codeAction(1400)
-I[11:32:59.567] --> reply:textDocument/codeAction(1400) 0 ms
-I[11:32:59.567] <-- textDocument/documentLink(1401)
-I[11:32:59.567] --> reply:textDocument/documentLink(1401) 0 ms
-I[11:32:59.570] <-- textDocument/hover(1402)
-I[11:32:59.573] --> reply:textDocument/hover(1402) 2 ms
+Once upon a midnight dreary,
+While I pondered, weak and weary.
+Over many a quaint and curious
+Volume of forgotten lore.
+While I nodded,
+Nearly napping,
+Suddenly there came a tapping.
+As of some one gently rapping,
+Rapping at my chamber door.
+Tis some visitor,
+I muttered,
+Tapping at my chamber door.
+Only this and nothing more.
+Ah,
+Distinctly I remember it was in the bleak December.
+And each separate dying ember.
+Wrought its ghost upon the floor.
+Eagerly I wished the morrow.
+Vainly I had sought to borrow.
+From my books surcease of sorrow.
+Sorrow for the lost Lenore.
+For the rare and radiant maiden.
+Whom the angels name Lenore.
+Nameless here for evermore.

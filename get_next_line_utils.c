@@ -1,39 +1,38 @@
 #include "get_next_line.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*p;
-	size_t	i;
-
-	i = ft_strlen(s);
-	if (start < i)
-	{
-		if (i > len)
-			p = (char *) malloc(sizeof(char) * len + 1);
-		else
-			p = (char *) malloc(sizeof(char) * i + 1);
-		if (p == NULL)
-			return (NULL);
-		ft_strlcpy(p, &s[start], len + 1);
-	}
-	else
-	{
-		p = (char *) malloc(sizeof(char) * 1);
-		if (p == NULL)
-			return (NULL);
-		ft_strlcpy(p, "", 1);
-	}
-	return (p);
-}
-
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
 	i = 0;
-	while (*s++)
+	while (s[i] != '\0')
 		i++;
 	return (i);
+}
+
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+{
+	size_t	i;
+	size_t	j;
+	size_t	org_size;
+
+	i = 0;
+	j = dstsize;
+	while (j-- != 0 && dst[i] != '\0')
+		i++;
+	j = dstsize - i;
+	if (j == 0)
+		return (ft_strlen(src) + i);
+	j = 0;
+	org_size = i;
+	while (i < (dstsize - 1) && src[j])
+	{
+		dst[i] = src[j];
+		i++;
+		j++;
+	}
+	dst[i] = '\0';
+	return (ft_strlen(src) + org_size);
 }
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
@@ -68,27 +67,28 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (p);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
+	char	*p;
 	size_t	i;
-	size_t	j;
-	size_t	org_size;
 
-	i = 0;
-	j = dstsize;
-	while (j-- != 0 && dst[i] != '\0')
-		i++;
-	j = dstsize - i;
-	if (j == 0)
-		return (ft_strlen(src) + i);
-	j = 0;
-	org_size = i;
-	while (i < (dstsize - 1) && src[j])
+	i = ft_strlen(s);
+	if (start < i)
 	{
-		dst[i] = src[j];
-		i++;
-		j++;
+		if (i > len)
+			p = (char *) malloc(sizeof(char) * len + 1);
+		else
+			p = (char *) malloc(sizeof(char) * i + 1);
+		if (p == NULL)
+			return (NULL);
+		ft_strlcpy(p, &s[start], len + 1);
 	}
-	dst[i] = '\0';
-	return (ft_strlen(src) + org_size);
+	else
+	{
+		p = (char *) malloc(sizeof(char) * 1);
+		if (p == NULL)
+			return (NULL);
+		ft_strlcpy(p, "", 1);
+	}
+	return (p);
 }
