@@ -1,50 +1,55 @@
 #include "get_next_line.h"
 #include <stdio.h>
-#include <fcntl.h>
-#define LN '\n'
 #define BUFFER_SIZE 50
 
-int	slice_val(char *str, size_t size)
+static int	slice_check(char *str, size_t size)
 {
 	size_t	i;
 
 	i = 0;
-	while (i != size)
+	while (str[i] != '\n')
 	{
-		if (str[i] == '\n')
-			return (i);
-		else if (str[i] == EOF)
-			return (i);
+		if (i == size)
+			return (0);
 		i++;
 	}
-	return (0);
+	return (i);
 }
 
-int	get_line(int fd, char **line)
+static void	splited(char *str, char **line, size_t index, size_t size)
 {
-	static char	slice[BUFFER_SIZE];
+	char	*temp_str;
+	char	*temp_slice;
+
+	temp_str = *line;
+	temp_slice = ft_substr(str, index, size);
+	*line = ft_strjoin(temp_str, temp_slice);
+	if (index != 0)
+		str[index] = 32;
+	free(temp_str);
+	free(temp_slice);
+}
+
+static int	get_line(int fd, char **line, char *slice)
+{
 	char		*temp;
 	size_t		i;
-	size_t		j;
 
-	i = slice_val(slice, BUFFER_SIZE);
+	i = slice_check(slice, BUFFER_SIZE);
 	if (i)
+		splited(slice, line, i, BUFFER_SIZE - i - slice_check(&slice[i + 1], BUFFER_SIZE - i));
+	while (0 < read(fd, slice, BUFFER_SIZE))
 	{
-		temp = ft_substr(slice, i, BUFFER_SIZE - i + 1);
-		*line = ft_strjoin(*line, temp);
-	}
-	while (0 != read(fd, slice, BUFFER_SIZE))
-	{
-		i = slice_val(slice, BUFFER_SIZE);
+		i = slice_check(slice, BUFFER_SIZE);
 		if (!i)
 		{
-			temp = ft_substr(slice, 0, BUFFER_SIZE);
-			*line = ft_strjoin(*line, temp);
+			temp = *line;
+			*line = ft_strjoin(*line, slice);
+			free(temp);
 		}
 		else
 		{
-			temp = ft_substr(slice, 0, i);
-			*line = ft_strjoin(*line, temp);
+			splited(slice, line, 0, i);
 			return (1);
 		}
 	}
@@ -53,10 +58,16 @@ int	get_line(int fd, char **line)
 
 int	get_next_line(int fd, char **line)
 {
-	static char		*string;
+	static char	slice[BUFFER_SIZE + 1];
+	char		*string;
+	size_t		i;
 
-	string = calloc(1, BUFFER_SIZE);
-	if (get_line(fd, &string))
+	i = 0;
+	slice[BUFFER_SIZE] = '\0';
+	string = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
+	while (i <= BUFFER_SIZE)
+		string[i++] = '\0';
+	if (get_line(fd, &string, slice))
 	{
 		*line = string;
 		return (1);
