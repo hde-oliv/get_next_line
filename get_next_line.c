@@ -2,18 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
-#define BUFFER_SIZE 1
 
 int	newline_handler(char **string, char **line)
 {
 	int		i;
-	char *temp_str;
+	char	*temp_str;
 
 	i = 0;
 	while ((*string)[i] != '\n')
 		if ((*string)[i++] == '\0')
 			return (0);
-	(*string)[i] = '\0';
 	*line = ft_substr(*string, 0, i);
 	temp_str = *string;
 	*string = ft_substr((*string + i + 1), 0, BUFFER_SIZE - i - 1);
@@ -21,10 +19,22 @@ int	newline_handler(char **string, char **line)
 	return (1);
 }
 
+int	eof_handler(char **string, char **line)
+{
+	int		i;
+
+	if (*string == NULL)
+		return (0);
+	i = ft_strlen(*string);
+	*line = ft_substr(*string, 0, i);
+	free(*string);
+	*string = NULL;
+	return (1);
+}
+
 int	get_line(int fd, char **string, char *slice, char **line)
 {
 	char	*temp;
-	int		i;
 
 	while (read(fd, slice, BUFFER_SIZE) > 0)
 	{
@@ -39,7 +49,7 @@ int	get_line(int fd, char **string, char *slice, char **line)
 		if (newline_handler(string, line))
 			return (1);
 	}
-	return (0);
+	return (eof_handler(string, line));
 }
 
 int	get_next_line(int fd, char **line)
