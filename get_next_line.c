@@ -2,88 +2,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
+#define BUFFER_SIZE 1
 
-int	check_newline(char *slice)
+int	newline_handler(char **string, char **line)
 {
 	int		i;
-
-	i = 0;
-	while (slice[i] != '\n')
-		if (slice[i++] == '\0')
-			return (0);
-	return (i);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	while (n-- > 0)
-		*(unsigned char *)s++ = '\0';
-}
-
-void excess_handler(char *slice, char **string, int index)
-{
-	char *temp_slice;
 	char *temp_str;
 
-	temp_slice = ft_substr(slice, 0, index);
+	i = 0;
+	while ((*string)[i] != '\n')
+		if ((*string)[i++] == '\0')
+			return (0);
+	(*string)[i] = '\0';
+	*line = ft_substr(*string, 0, i);
 	temp_str = *string;
-	*string = ft_strjoin(*string, temp_slice);
-	free(temp_slice);
+	*string = ft_substr((*string + i + 1), 0, BUFFER_SIZE - i - 1);
 	free(temp_str);
-	ft_memmove(slice, &slice[index + 1], BUFFER_SIZE - index + 1);
+	return (1);
 }
 
-
-int	get_line(int fd, char **string, char *slice)
+int	get_line(int fd, char **string, char *slice, char **line)
 {
 	char	*temp;
 	int		i;
 
-	if (ft_strlen(slice))
+	while (read(fd, slice, BUFFER_SIZE) > 0)
 	{
-		i = check_newline(slice);
-		if (!i)
-		{
-			excess_handler(slice, string, ft_strlen(slice));
-			ft_bzero(slice, BUFFER_SIZE + 1);
-			return(get_line(fd, string, slice));
-		}
-		excess_handler(slice, string, i);
-		return (1);
-	}
-	if (read(fd, slice, BUFFER_SIZE) > 0)
-	{
-		i = check_newline(slice);
-		if (!i)
+		if (*string)
 		{
 			temp = *string;
 			*string = ft_strjoin(*string, slice);
 			free(temp);
-			return (get_line(fd, string, slice));
 		}
 		else
-		{
-			excess_handler(slice, string, i);
+			*string = ft_substr(slice, 0, BUFFER_SIZE + 1);
+		if (newline_handler(string, line))
 			return (1);
-		}
 	}
 	return (0);
 }
 
-
 int	get_next_line(int fd, char **line)
 {
-	static char	slice[BUFFER_SIZE + 1];
-	char		*string;
+	char			*slice;
+	static char		*string;
 
-	//if (fd > FD_SETSIZE)
-	string = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
-	ft_bzero(string, BUFFER_SIZE + 1);
-	if (get_line(fd, &string, slice))
-	{
-		*line = string;
+	if (fd >= FD_SETSIZE || fd < 0 || !line)
+		return (-1);
+	slice = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
+	slice[BUFFER_SIZE] = '\0';
+	if (get_line(fd, &string, slice, line))
 		return (1);
-	}
 	else
 		return (0);
 }
