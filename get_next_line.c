@@ -1,72 +1,84 @@
 #include "get_next_line.h"
 #include <stdio.h>
-#define BUFFER_SIZE 50
+#include <stdlib.h>
+#include <sys/select.h>
 
-static int	slice_check(char *str, size_t size)
+int	check_newline(char *slice)
 {
-	size_t	i;
+	int		i;
 
 	i = 0;
-	while (str[i] != '\n')
-	{
-		if (i == size)
+	while (slice[i] != '\n')
+		if (slice[i++] == '\0')
 			return (0);
-		i++;
-	}
 	return (i);
 }
 
-static void	splited(char *str, char **line, size_t index, size_t size)
+void	ft_bzero(void *s, size_t n)
 {
-	char	*temp_str;
-	char	*temp_slice;
-
-	temp_str = *line;
-	temp_slice = ft_substr(str, index, size);
-	*line = ft_strjoin(temp_str, temp_slice);
-	if (index != 0)
-		str[index] = 32;
-	free(temp_str);
-	free(temp_slice);
+	while (n-- > 0)
+		*(unsigned char *)s++ = '\0';
 }
 
-static int	get_line(int fd, char **line, char *slice)
+void excess_handler(char *slice, char **string, int index)
 {
-	char		*temp;
-	size_t		i;
+	char *temp_slice;
+	char *temp_str;
 
-	i = slice_check(slice, BUFFER_SIZE);
-	if (i)
-		splited(slice, line, i, BUFFER_SIZE - i - slice_check(&slice[i + 1], BUFFER_SIZE - i));
-	while (0 < read(fd, slice, BUFFER_SIZE))
+	temp_slice = ft_substr(slice, 0, index);
+	temp_str = *string;
+	*string = ft_strjoin(*string, temp_slice);
+	free(temp_slice);
+	free(temp_str);
+	ft_memmove(slice, &slice[index + 1], BUFFER_SIZE - index + 1);
+}
+
+
+int	get_line(int fd, char **string, char *slice)
+{
+	char	*temp;
+	int		i;
+
+	if (ft_strlen(slice))
 	{
-		i = slice_check(slice, BUFFER_SIZE);
+		i = check_newline(slice);
 		if (!i)
 		{
-			temp = *line;
-			*line = ft_strjoin(*line, slice);
+			excess_handler(slice, string, ft_strlen(slice));
+			ft_bzero(slice, BUFFER_SIZE + 1);
+			return(get_line(fd, string, slice));
+		}
+		excess_handler(slice, string, i);
+		return (1);
+	}
+	if (read(fd, slice, BUFFER_SIZE) > 0)
+	{
+		i = check_newline(slice);
+		if (!i)
+		{
+			temp = *string;
+			*string = ft_strjoin(*string, slice);
 			free(temp);
+			return (get_line(fd, string, slice));
 		}
 		else
 		{
-			splited(slice, line, 0, i);
+			excess_handler(slice, string, i);
 			return (1);
 		}
 	}
 	return (0);
 }
 
+
 int	get_next_line(int fd, char **line)
 {
 	static char	slice[BUFFER_SIZE + 1];
 	char		*string;
-	size_t		i;
 
-	i = 0;
-	slice[BUFFER_SIZE] = '\0';
+	//if (fd > FD_SETSIZE)
 	string = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
-	while (i <= BUFFER_SIZE)
-		string[i++] = '\0';
+	ft_bzero(string, BUFFER_SIZE + 1);
 	if (get_line(fd, &string, slice))
 	{
 		*line = string;
