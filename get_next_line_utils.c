@@ -67,42 +67,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (p);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	ft_bzero(void *s, size_t n)
 {
-	char	*p;
-	size_t	i;
-
-	i = ft_strlen(s);
-	if (start < i)
-	{
-		if (i > len)
-			p = (char *) malloc(sizeof(char) * len + 1);
-		else
-			p = (char *) malloc(sizeof(char) * i + 1);
-		if (p == NULL)
-			return (NULL);
-		ft_strlcpy(p, &s[start], len + 1);
-	}
-	else
-	{
-		p = (char *) malloc(sizeof(char) * 1);
-		if (p == NULL)
-			return (NULL);
-		ft_strlcpy(p, "", 1);
-	}
-	return (p);
-}
-
-void	*ft_memmove(void *dst, const void *src, size_t len)
-{
-	void	*p;
-
-	p = dst;
-	if (dst < src)
-		while (len-- > 0)
-			*(unsigned char *)dst++ = *(unsigned char *)src++;
-	else if (dst > src)
-		while (len-- > 0)
-			*(unsigned char *)(dst + len) = *(unsigned char *)(src + len);
-	return (p);
+	while (n-- > 0)
+		*(unsigned char *)s++ = '\0';
 }

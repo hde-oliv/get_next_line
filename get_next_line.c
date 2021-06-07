@@ -2,8 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
+#define BUFFER_SIZE 60
 
-int	newline_handler(char **string, char **line)
+char	*ft_strdup(const char *s1)
+{
+	size_t	i;
+	void	*p;
+
+	i = ft_strlen(s1) + 1;
+	p = malloc(i * sizeof(char));
+	if (p == NULL)
+		return (NULL);
+	ft_strlcpy(p, s1, i);
+	return (p);
+}
+
+static int	newline_handler(char **string, char **line)
 {
 	int		i;
 	char	*temp_str;
@@ -12,31 +26,31 @@ int	newline_handler(char **string, char **line)
 	while ((*string)[i] != '\n')
 		if ((*string)[i++] == '\0')
 			return (0);
-	*line = ft_substr(*string, 0, i);
+	(*string)[i] = 0;
+	*line = ft_strdup(*string);
 	temp_str = *string;
-	*string = ft_substr((*string + i + 1), 0, BUFFER_SIZE - i - 1);
+	*string = ft_strdup(&(*string)[i+1]);
 	free(temp_str);
 	return (1);
 }
 
-int	eof_handler(char **string, char **line)
+static int	eof_handler(char **string, char **line)
 {
-	int		i;
-
 	if (*string == NULL)
 		return (0);
-	i = ft_strlen(*string);
-	*line = ft_substr(*string, 0, i);
+	*line = ft_strdup(*string);
 	free(*string);
 	*string = NULL;
 	return (1);
 }
 
-int	get_line(int fd, char **string, char *slice, char **line)
+static int	get_line(int fd, char **string, char *slice, char **line)
 {
 	char	*temp;
+	int 	read_val;
 
-	while (read(fd, slice, BUFFER_SIZE) > 0)
+	read_val = read(fd, slice, BUFFER_SIZE);
+	while (read_val > 0)
 	{
 		if (*string)
 		{
@@ -45,22 +59,22 @@ int	get_line(int fd, char **string, char *slice, char **line)
 			free(temp);
 		}
 		else
-			*string = ft_substr(slice, 0, BUFFER_SIZE + 1);
+			*string = ft_strdup(slice);
 		if (newline_handler(string, line))
 			return (1);
+		read_val = read(fd, slice, BUFFER_SIZE);
 	}
 	return (eof_handler(string, line));
 }
 
 int	get_next_line(int fd, char **line)
 {
-	char			*slice;
+	char			slice[BUFFER_SIZE + 1];
 	static char		*string;
 
+	ft_bzero(slice, BUFFER_SIZE + 1);
 	if (fd >= FD_SETSIZE || fd < 0 || !line)
 		return (-1);
-	slice = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
-	slice[BUFFER_SIZE] = '\0';
 	if (get_line(fd, &string, slice, line))
 		return (1);
 	else

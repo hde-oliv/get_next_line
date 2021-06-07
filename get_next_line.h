@@ -13,7 +13,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-void	*ft_memmove(void *dst, const void *src, size_t len);
+void	ft_bzero(void *s, size_t n);
+char	*ft_strdup(const char *s1);
 
 #endif
