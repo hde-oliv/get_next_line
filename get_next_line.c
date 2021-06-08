@@ -1,4 +1,5 @@
 #include "get_next_line.h"
+#include <unistd.h>
 
 char	*ft_strdup(const char *s1)
 {
@@ -24,6 +25,8 @@ static int	newline_handler(char **string, char **line)
 			return (0);
 	(*string)[i] = 0;
 	*line = ft_strdup(*string);
+	if (!*line)
+		return (-1);
 	temp_str = *string;
 	*string = ft_strdup(&(*string)[i+1]);
 	free(temp_str);
@@ -56,8 +59,10 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 		}
 		else
 			*string = ft_strdup(slice);
-		if (newline_handler(string, line))
+		if (newline_handler(string, line) == 1)
 			return (1);
+		if (*string == NULL)
+			return (-1);
 		read_val = read(fd, slice, BUFFER_SIZE);
 	}
 	return (eof_handler(string, line));
@@ -67,12 +72,11 @@ int	get_next_line(int fd, char **line)
 {
 	char			slice[BUFFER_SIZE + 1];
 	static char		*string;
+	int				result;
 
-	ft_bzero(slice, BUFFER_SIZE + 1);
-	if ((fd >= FD_MAX || fd < 0) || !line)
+	if ((fd >= FD_MAX || fd < 0) || !line || read(fd, slice, 0) < 0)
 		return (-1);
-	if (get_line(fd, &string, slice, line))
-		return (1);
-	else
-		return (0);
+	ft_bzero(slice, BUFFER_SIZE + 1);
+	result = get_line(fd, &string, slice, line);
+	return (result);
 }
