@@ -43,7 +43,7 @@ static int	eof_handler(char **string, char **line)
 		*line = ft_strdup("");
 		free(*string);
 		*string = (void *)2;
-		return (1);
+		return (0);
 	}
 	*line = ft_strdup(*string);
 	free(*string);
