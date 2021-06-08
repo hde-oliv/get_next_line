@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/select.h>
-#define BUFFER_SIZE 60
+#define BUFFER_SIZE 1
 
 char	*ft_strdup(const char *s1)
 {
@@ -73,7 +73,7 @@ int	get_next_line(int fd, char **line)
 	static char		*string;
 
 	ft_bzero(slice, BUFFER_SIZE + 1);
-	if (fd >= FD_SETSIZE || fd < 0 || !line)
+	if ((fd >= FD_SETSIZE || fd < 0) || !line)
 		return (-1);
 	if (get_line(fd, &string, slice, line))
 		return (1);
