@@ -68,7 +68,6 @@ int	get_next_line(int fd, char **line)
 	char			slice[BUFFER_SIZE + 1];
 	static char		*string;
 
-	string = NULL;
 	ft_bzero(slice, BUFFER_SIZE + 1);
 	if ((fd >= FD_MAX || fd < 0) || !line || read(fd, slice, 0) < 0)
 		return (-1);
