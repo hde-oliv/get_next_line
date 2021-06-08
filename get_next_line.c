@@ -69,7 +69,7 @@ int	get_next_line(int fd, char **line)
 	static char		*string;
 
 	ft_bzero(slice, BUFFER_SIZE + 1);
-	if ((fd >= FD_MAX || fd < 0) || !line)
+	if ((fd >= FD_MAX || fd < 0) || !line || read(fd, slice, 0) < 0)
 		return (-1);
 	if (get_line(fd, &string, slice, line))
 		return (1);
