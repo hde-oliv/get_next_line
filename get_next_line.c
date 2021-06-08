@@ -1,8 +1,6 @@
 #include "get_next_line.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/select.h>
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 60
+#define MAX_FD 256
 
 char	*ft_strdup(const char *s1)
 {
@@ -34,13 +32,20 @@ static int	newline_handler(char **string, char **line)
 	return (1);
 }
 
-static int	eof_handler(char **string, char **line)
+static int	eof_handler(char **string, char **line, int index)
 {
-	if (*string == NULL)
+	if (*string == (void *)2)
 		return (0);
+	else if (*string == NULL)
+	{
+		*line = ft_strdup("");
+		free(*string);
+		*string = (void *)2;
+		return (1);
+	}
 	*line = ft_strdup(*string);
 	free(*string);
-	*string = NULL;
+	*string = (void *)2;
 	return (1);
 }
 
@@ -64,19 +69,18 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 			return (1);
 		read_val = read(fd, slice, BUFFER_SIZE);
 	}
-	return (eof_handler(string, line));
+	return (eof_handler(string, line, read_val));
 }
 
 int	get_next_line(int fd, char **line)
 {
 	char			slice[BUFFER_SIZE + 1];
 	static char		*string;
+	int				res;
 
-	ft_bzero(slice, BUFFER_SIZE + 1);
-	if ((fd >= FD_SETSIZE || fd < 0) || !line)
+	if ((fd >= MAX_FD || fd < 0) || !line)
 		return (-1);
-	if (get_line(fd, &string, slice, line))
-		return (1);
-	else
-		return (0);
+	ft_bzero(slice, BUFFER_SIZE + 1);
+	res = get_line(fd, &string, slice, line);
+	return (res);
 }
