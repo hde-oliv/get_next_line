@@ -6,7 +6,7 @@
 # include <string.h>
 # include <stdlib.h>
 
-# define LB \n
+# define FD_MAX 256
 
 int		get_next_line(int fd, char **line);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
