@@ -1,4 +1,8 @@
 #include "get_next_line.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/select.h>
+#define BUFFER_SIZE 1
 
 char	*ft_strdup(const char *s1)
 {
@@ -68,9 +72,8 @@ int	get_next_line(int fd, char **line)
 	char			slice[BUFFER_SIZE + 1];
 	static char		*string;
 
-	string = NULL;
 	ft_bzero(slice, BUFFER_SIZE + 1);
-	if ((fd >= FD_MAX || fd < 0) || !line || read(fd, slice, 0) < 0)
+	if ((fd >= FD_SETSIZE || fd < 0) || !line)
 		return (-1);
 	if (get_line(fd, &string, slice, line))
 		return (1);
