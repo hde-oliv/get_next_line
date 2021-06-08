@@ -27,7 +27,7 @@ static int	newline_handler(char **string, char **line)
 	(*string)[i] = 0;
 	*line = ft_strdup(*string);
 	temp_str = *string;
-	*string = ft_strdup(&(*string)[i+1]);
+	*string = ft_strdup(&(*string)[i + 1]);
 	free(temp_str);
 	return (1);
 }
@@ -52,7 +52,7 @@ static int	eof_handler(char **string, char **line, int index)
 static int	get_line(int fd, char **string, char *slice, char **line)
 {
 	char	*temp;
-	int 	read_val;
+	int		read_val;
 
 	read_val = read(fd, slice, BUFFER_SIZE);
 	while (read_val > 0)
