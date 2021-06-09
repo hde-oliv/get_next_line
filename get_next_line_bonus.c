@@ -79,12 +79,12 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 int	get_next_line(int fd, char **line)
 {
 	char			slice[BUFFER_SIZE + 1];
-	static char		*string;
+	static char		*string[MAX_FD];
 	int				res;
 
 	if ((fd >= MAX_FD || fd < 0) || !line)
 		return (-1);
 	ft_bzero(slice, BUFFER_SIZE + 1);
-	res = get_line(fd, &string, slice, line);
+	res = get_line(fd, &(string[fd]), slice, line);
 	return (res);
 }
