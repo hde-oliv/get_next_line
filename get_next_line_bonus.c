@@ -1,8 +1,4 @@
-#include "get_next_line.h"
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 5
-#endif
-#define MAX_FD 256
+#include "get_next_line_bonus.h"
 
 char	*ft_strdup(const char *s1)
 {
