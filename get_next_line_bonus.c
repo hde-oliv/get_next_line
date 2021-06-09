@@ -24,8 +24,12 @@ static int	newline_handler(char **string, char **line)
 			return (0);
 	(*string)[i] = 0;
 	*line = ft_strdup(*string);
+	if (!*line)
+		return (-1);
 	temp_str = *string;
 	*string = ft_strdup(&(*string)[i + 1]);
+	if (!*string)
+		return (-1);
 	free(temp_str);
 	return (1);
 }
@@ -37,11 +41,15 @@ static int	eof_handler(char **string, char **line)
 	if (*string == NULL)
 	{
 		*line = ft_strdup("");
+		if (!*line)
+			return (-1);
 		return (0);
 	}
-	if (newline_handler(string, line))
+	if (newline_handler(string, line) == 1)
 		return (1);
 	*line = ft_strdup(*string);
+	if (!*line)
+		return (-1);
 	temp_str = *string;
 	free(temp_str);
 	*string = NULL;
@@ -51,23 +59,28 @@ static int	eof_handler(char **string, char **line)
 static int	get_line(int fd, char **string, char *slice, char **line)
 {
 	char	*temp;
-	int		read_val;
 
-	read_val = read(fd, slice, BUFFER_SIZE);
-	while (read_val > 0)
+	while (read(fd, slice, BUFFER_SIZE) > 0)
 	{
 		if (*string)
 		{
 			temp = *string;
 			*string = ft_strjoin(*string, slice);
+			if (!string)
+				return (-1);
 			free(temp);
 		}
 		else
+		{
 			*string = ft_strdup(slice);
-		if (newline_handler(string, line))
+			if (!string)
+				return (-1);
+		}
+		if (newline_handler(string, line) == 1)
 			return (1);
+		if (!*line)
+			return (-1);
 		ft_bzero(slice, BUFFER_SIZE + 1);
-		read_val = read(fd, slice, BUFFER_SIZE);
 	}
 	return (eof_handler(string, line));
 }
