@@ -15,5 +15,6 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strjoin(char const *s1, char const *s2);
 void	ft_bzero(void *s, size_t n);
 char	*ft_strdup(const char *s1);
+void    *ft_calloc(size_t count, size_t size);
 
 #endif

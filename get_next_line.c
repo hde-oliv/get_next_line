@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 60
+# define BUFFER_SIZE 5
 #endif
 #define MAX_FD 256
 
@@ -36,19 +36,19 @@ static int	newline_handler(char **string, char **line)
 
 static int	eof_handler(char **string, char **line)
 {
-	if (*string == (void *)2)
-		return (0);
-	else if (*string == NULL)
+	if (*string == NULL)
 	{
 		*line = ft_strdup("");
 		free(*string);
 		*string = (void *)2;
 		return (0);
 	}
+	if (newline_handler(string, line))
+		return (1);
 	*line = ft_strdup(*string);
 	free(*string);
 	*string = (void *)2;
-	return (1);
+	return (0);
 }
 
 static int	get_line(int fd, char **string, char *slice, char **line)
@@ -69,6 +69,7 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 			*string = ft_strdup(slice);
 		if (newline_handler(string, line))
 			return (1);
+		ft_bzero(slice, BUFFER_SIZE + 1);
 		read_val = read(fd, slice, BUFFER_SIZE);
 	}
 	return (eof_handler(string, line));
