@@ -54,6 +54,8 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 	int		read_val;
 
 	read_val = read(fd, slice, BUFFER_SIZE);
+	if (read_val == -1)
+		return (-1);
 	while (read_val > 0)
 	{
 		if (*string)
