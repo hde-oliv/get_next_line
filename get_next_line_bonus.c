@@ -76,15 +76,14 @@ static int	get_line(int fd, char **string, char *slice, char **line)
 
 int	get_next_line(int fd, char **line)
 {
-
 	static char		*string[MAX_FD];
 	char			*slice;
- 	int				res;
+	int				res;
 
- 	if ((fd >= MAX_FD || fd < 0) || !line || BUFFER_SIZE <= 0)
- 		return (-1);
+	if (!line || BUFFER_SIZE <= 0)
+		return (-1);
 	slice = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
- 	ft_bzero(slice, BUFFER_SIZE + 1);
+	ft_bzero(slice, BUFFER_SIZE + 1);
 	res = get_line(fd, &(string[fd]), slice, line);
 	free(slice);
 	if (*line == NULL)

@@ -80,7 +80,7 @@ int	get_next_line(int fd, char **line)
 	static char		*string;
 	int				res;
 
-	if ((fd >= MAX_FD || fd < 0) || !line || BUFFER_SIZE <= 0)
+	if (!line || BUFFER_SIZE <= 0)
 		return (-1);
 	slice = (char *) malloc(sizeof(char) * BUFFER_SIZE + 1);
 	ft_bzero(slice, BUFFER_SIZE + 1);
