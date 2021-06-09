@@ -82,5 +82,7 @@ int	get_next_line(int fd, char **line)
 		return (-1);
 	ft_bzero(slice, BUFFER_SIZE + 1);
 	res = get_line(fd, &string, slice, line);
+	if (*line == NULL)
+		return (-1);
 	return (res);
 }
