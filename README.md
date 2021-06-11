@@ -59,9 +59,9 @@ Its return values are 1 (for line read), 0 (for EOF) and -1 (for error). So you 
 		return (0);
 	}
 
-After that compile it with the get_next_line_utils file...
+After that compile it defining the buffer size and with the get_next_line_utils file...
 
-    clang main.c get_next_line.c get_next_line_utils.c
+    clang -D BUFFER_SIZE=10 main.c get_next_line.c get_next_line_utils.c
     
 and run it!
 
