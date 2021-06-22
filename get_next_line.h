@@ -13,7 +13,7 @@
  * @param line A pointer to a string to write the
  * allocated line.
  *
- * @return 1 (Success) | 0 (EOF) | -1 (Error).
+ * @return 1 (Success) | 0 (EOF) | -1 (Error)
  */
 int		get_next_line(int fd, char **line);
 
