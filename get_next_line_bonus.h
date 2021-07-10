@@ -4,7 +4,6 @@
 # include <stdlib.h>
 # define MAX_FD 256
 
-
 /**
  * @brief Reads an fd and returns a line from it.
  * If it's called in a loop, it'll print the entire file.
@@ -88,6 +87,5 @@ void	ft_bzero(void *s, size_t n);
  * @return The new string.
  */
 char	*ft_strdup(const char *s1);
-
 
 #endif
