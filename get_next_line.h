@@ -6,8 +6,8 @@
 /**
  * get_next_line - Reads a line from a file descriptor
  *
- * @fd: File descriptor to read
- * @line: A pointer to a string to store the line
+ * @fd: File descriptor to read.
+ * @line: A pointer to a string to store the line.
  *
  * Description: Reads an fd and returns a line from it.
  * If it's called in a loop, it'll print the entire file.
