@@ -3,7 +3,7 @@
 #+DESCRIPTION: A function that reads a file descriptor per line.
 
 ** What it is
-This project consists on a function that reads a line from a file descriptor and returns it, if it is called in a loop it must read the entire file without losing the reference.
+This project consists of a function that reads a line from a file descriptor and returns it, if it is called in a loop it must read the entire file without losing the reference.
 
 ** Badge
 #+BEGIN_CENTER
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 #+END_SRC
 The return values are 1 (for line read), 0 (for EOF) and -1 (for error). So you can call it in a loop to print the entire file.
 
-After that compile it defining the buffer size.
+After that, compile it, defining the buffer size.
 #+BEGIN_SRC c
 clang -D BUFFER_SIZE=10 main.c get_next_line.c get_next_line_utils.c
 #+END_SRC c
@@ -52,7 +52,7 @@ And run it!
 #+BEGIN_SRC c
 ./a.out text.txt
 #+END_SRC
-- The bonus version works the same but it can handle multiple file descriptors.
+- The bonus version works the same, but it can handle multiple file descriptors.
 
 ** Found any bug?
 Feel free to contact me or create an issue!
