@@ -3,6 +3,7 @@
 </div>
 <div align="center">
   <img src="https://github.com/hde-oliv/get_next_line/actions/workflows/norminette.yml/badge.svg"/>
+  <img src="https://www.codefactor.io/repository/github/hde-oliv/get_next_line/badge" alt="CodeFactor" /></a>
 </div>
 
 ## What it is
