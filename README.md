@@ -1,12 +1,4 @@
-<div align="center">
-  <img src="https://i.imgur.com/YmiyxCH.png"/>
-</div>
-<div align="center">
-  <img src="https://github.com/hde-oliv/get_next_line/actions/workflows/norminette.yml/badge.svg"/>
-  <a href="https://www.codacy.com/gh/hde-oliv/get_next_line/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hde-oliv/get_next_line&amp;utm_campaign=Badge_Grade">
-    <img src="https://app.codacy.com/project/badge/Grade/d10830f68b4645219ada99bcce4b232a"/>
-  </a>
-</div>
+# Get Next Line
 
 ## What it is
 This project consists of a function that reads a line from a file descriptor and returns it, if it is called in a loop it must read the entire file without losing the reference.
