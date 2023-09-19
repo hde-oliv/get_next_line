@@ -1,9 +1,10 @@
 # Get Next Line
 
-## What it is
-This project consists of a function that reads a line from a file descriptor and returns it, if it is called in a loop it must read the entire file without losing the reference.
+## What is it?
+This project consists of a function that reads a line from a file descriptor and returns it.  
+If it is called in a loop, it must read the entire file without losing the reference.
 
-Succeeded with 115%
+**Succeeded with 115%**
 
 ## Skills
 - Algorithms & AI
@@ -13,12 +14,12 @@ Succeeded with 115%
 
 
 ## How to use it
-Requisites:
+Requirements:
 ```shell
-clang
+sudo apt install clang
 ```
 
-Then you will need a main function that have access to a file descriptor, using open in a file for example:
+Then you will need a C program that has access to a file descriptor, using open in a file, for example:
 ```c
 int main(int argc, char **argv)
 {
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
 	while (get_next_line(fd, &line) == 1);
 	{
 		printf("%s", line);
-		free(line); // Because the line is allocated on heap
+		free(line); // Because the line is allocated
 	}
 	return (0);
 }
@@ -47,7 +48,8 @@ And run it!
 ```
 - The bonus version works the same, but it can handle multiple file descriptors.
 
-## Found any bug?
+## Found any bugs?
 Feel free to contact me or create an issue!
 
-###### Licensed under GPLv3
+## License
+This project is licensed under the GNU General Public License v3.0 - see the [COPYING](https://github.com/hde-oliv/get_next_line/blob/master/COPYING) file for details.
